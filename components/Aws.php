@@ -15,7 +15,7 @@ class Aws extends Component
     public $region;
 
     /** @var string AWS version */
-    public $version;
+    public $version = 'latest';
 
     /** @var string AWS bucket */
     public $bucket;
@@ -35,7 +35,8 @@ class Aws extends Component
         $this->aws = new AwsSdk(array_merge([
             'credentials' => $this->credentials,
             'region' => $this->region,
-            'version' => $this->version
+            'version' => $this->version,
+            'Bucket' => $this->bucket,
         ], $this->extra));
     }
 
@@ -46,7 +47,7 @@ class Aws extends Component
      * @param string $expires
      * @return PostObjectV4
      */
-    public function createPostObjectV4($fileName, $acl = 'public-read', $expires = '+2 hours')
+    public function createPostObjectV4($fileName, $acl = 'public-read', $expires = '+1 hours')
     {
         return new PostObjectV4(
             $this->aws->createS3(),
