@@ -1,8 +1,8 @@
 {
-    "name": "andreyv/yii2-service-events-client",
+    "name": "andreyv/yii2-aws-file-input-widget",
     "description": "Allows developers to integrate AWS S3 file upload",
     "type": "yii2-helper",
-    "keywords": ["yii2", "events", "service"],
+    "keywords": ["yii2", "aws", "widget", "file", "input", "upload"],
     "license": "MIT",
     "authors": [
         {
