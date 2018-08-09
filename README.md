@@ -27,7 +27,7 @@ Add the following to your config file
 'components' => [
     ...
     'aws' => [
-        'class' => 'andreyv\aws\fileinput\components\Aws',
+        'class' => andreyv\aws\fileinput\components\Aws::class,
         'credentials' => [
             'key' => 'aws-access-key',
             'secret' => 'aws-secret',
@@ -59,8 +59,7 @@ echo $form->field($model, 'image')->widget(AwsFileInput::class, [
 ```php
 echo $form->field($model, 'image')->widget(AwsFileInput::class, [
     'awsComponent' => 'awsComponentName', //custom component name, `aws` by default
-    'fileNameParts' => 'uniqueKey', //custom file name parts, if not set `uniqueKey` will be used
+    'fileNameParts' => [$model->someAttribute, 'some-key'], //custom file name parts, if not set `uniqueKey` will be used
     'options' => ['accept' => 'image/*'], //acceptable files
 ]);
 ```
-
