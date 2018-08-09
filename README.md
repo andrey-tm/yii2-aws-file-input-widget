@@ -29,7 +29,7 @@ Add the following to your config file
         'aws' => [
             'class' => 'andreyv\aws\fileinput\components\Aws',
             'credentials' => [
-                'key' => 'aws-access-key,
+                'key' => 'aws-access-key',
                 'secret' => 'aws-secret,
             ],
             'region' => 'aws-region',
