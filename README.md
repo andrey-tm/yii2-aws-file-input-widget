@@ -25,18 +25,18 @@ Add the following to your config file
 
 ```php
 'components' => [
-        ...
-        'aws' => [
-            'class' => 'andreyv\aws\fileinput\components\Aws',
-            'credentials' => [
-                'key' => 'aws-access-key',
-                'secret' => 'aws-secret,
-            ],
-            'region' => 'aws-region',
-            'bucket' => 'bucket-name',
+    ...
+    'aws' => [
+        'class' => 'andreyv\aws\fileinput\components\Aws',
+        'credentials' => [
+            'key' => 'aws-access-key',
+            'secret' => 'aws-secret,
         ],
-        ...
+        'region' => 'aws-region',
+        'bucket' => 'bucket-name',
     ],
+    ...
+],
 
 ```
 
