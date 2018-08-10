@@ -3,6 +3,7 @@
 namespace andreyv\aws\fileinput\widgets;
 
 use yii\helpers\Inflector;
+use yii\helpers\ArrayHelper;
 use yii\base\InvalidConfigException;
 
 class AwsFileInput extends \kartik\file\FileInput
@@ -26,12 +27,21 @@ class AwsFileInput extends \kartik\file\FileInput
         }
         /** @var \Aws\S3\PostObjectV4 $awsPostObject */
         $awsPostObject = \Yii::$app->get($this->awsComponent)->createPostObjectV4($this->getUniqueFileName());
-        $this->options['hiddenOptions'] = [
-            'value' => $this->model->{$this->attribute} ?? ''
-        ];
-        $this->defaultPluginOptions['dropZoneEnabled'] = false;
-        $this->pluginOptions = array_merge(
-            $this->pluginOptions,
+        $this->options = ArrayHelper::merge(
+            [
+                'hiddenOptions' => [
+                    'value' => $this->model->{$this->attribute} ?? '',
+                ],
+            ],
+            $this->options
+        );
+        $this->defaultPluginOptions = ArrayHelper::merge(
+            [
+                'dropZoneEnabled' => false,
+            ],
+            $this->defaultPluginOptions
+        );
+        $this->pluginOptions = ArrayHelper::merge(
             [
                 'uploadAsync' => true,
                 'initialPreview' => $this->model->{$this->attribute} ?? '',
@@ -53,33 +63,39 @@ class AwsFileInput extends \kartik\file\FileInput
                         '</div>'
                     ]),
                 ],
-            ]
+            ],
+            $this->pluginOptions
         );
-        $this->pluginEvents['fileselect'] = "function(event, numFiles, label) {
-            $(this).fileinput('upload');
-        }";
-        $this->pluginEvents['filepreupload'] = "function (event, data, previewId, index) {
-            var file = data.files[0],
-                extension = file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 1),
-                fileName = data.form.get('key');
-            data.form.delete(this.name);
-            data.form.delete('file_id');
-            data.form.delete('key');
-            data.form.set('content-type', file.type);
-            data.form.set('key', fileName + extension);
-            data.form.set('file', file);
-        }";
-        $this->pluginEvents['fileuploaded'] = "function (event, data, index) {
-            var file = data.files[0],
-                extension = file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 1),
-                form = $('form#" . $this->field->form->id . "'),
-                filePath = '" . $awsPostObject->getFormAttributes()['action'] . "/' + data.extra.key + extension;
-            form.find('input[type=hidden][name=\"' + this.name + '\"]').val(filePath);
-            form.find('.file-caption-name').attr('title', '').val(filePath);
-        }";
-        $this->pluginEvents['filecleared'] = "function (event, id, index) {
-            $('form#" . $this->field->form->id . "').find('input[type=hidden][name=\"' + this.name + '\"]').val('');
-        }";
+        $this->pluginEvents = ArrayHelper::merge(
+            [
+                'fileselect' => "function(event, numFiles, label) {
+                    $(this).fileinput('upload');
+                }",
+                'filepreupload' => "function (event, data, previewId, index) {
+                    var file = data.files[0],
+                        extension = file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 1),
+                        fileName = data.form.get('key');
+                    data.form.delete(this.name);
+                    data.form.delete('file_id');
+                    data.form.delete('key');
+                    data.form.set('content-type', file.type);
+                    data.form.set('key', fileName + extension);
+                    data.form.set('file', file);
+                }",
+                'fileuploaded' => "function (event, data, index) {
+                    var file = data.files[0],
+                        extension = file.name.substr((~-file.name.lastIndexOf('.') >>> 0) + 1),
+                        form = $('form#" . $this->field->form->id . "'),
+                        filePath = '" . $awsPostObject->getFormAttributes()['action'] . "/' + data.extra.key + extension;
+                    form.find('input[type=hidden][name=\"' + this.name + '\"]').val(filePath);
+                    form.find('.file-caption-name').attr('title', '').val(filePath);
+                }",
+                'filecleared' => "function (event, id, index) {
+                    $('form#" . $this->field->form->id . "').find('input[type=hidden][name=\"' + this.name + '\"]').val('');
+                }",
+            ],
+            $this->pluginEvents
+        );
         $this->getView()->registerJs("$('form#" . $this->field->form->id ."').on('beforeSubmit', function () {
             if ($(this).find('.has-error').length) {
                 return false;
