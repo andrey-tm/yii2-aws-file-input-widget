@@ -17,6 +17,9 @@ class AwsFileInput extends \kartik\file\FileInput
     /** @var array Custom filename parts */
     public $fileNameParts = [];
 
+    /** @var string with path to folder in S3 bucket with trailing slash */
+    public $folder = '';
+    
     /**
      * @throws InvalidConfigException
      */
@@ -114,8 +117,8 @@ class AwsFileInput extends \kartik\file\FileInput
     {
         $formName = Inflector::camel2id($this->model->formName());
         if ($this->fileNameParts) {
-            return $filename = $formName . '-' . join('-', $this->fileNameParts) . '-' . uniqid();
+            return $filename = $this->folder . $formName . '-' . join('-', $this->fileNameParts) . '-' . uniqid();
         }
-        return join('-', [$formName, $this->model->{$this->uniqueKey}, $this->field->attribute, uniqid()]);
+        return $this->folder . join('-', [$formName, $this->model->{$this->uniqueKey}, $this->field->attribute, uniqid()]);
     }
 }
