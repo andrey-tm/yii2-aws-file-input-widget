@@ -17,7 +17,7 @@ class AwsFileInput extends \kartik\file\FileInput
     /** @var array Custom filename parts */
     public $fileNameParts = [];
 
-    /** @var string with path to folder in S3 bucket */
+    /** @var string with path to folder in S3 bucket with trailing slash */
     public $folder = '';
     
     /**
